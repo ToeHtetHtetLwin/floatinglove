@@ -1,5 +1,5 @@
 <div class="relative w-full h-screen overflow-hidden bg-[#020817]">
-  <div #canvasContainer class="absolute inset-0 z-0"></div>
+  <div #canvasContainer id="canvasContainer"></div>
 
   @if (isLoading()) {
     <div class="absolute inset-0 z-[60] flex items-center justify-center">
@@ -10,7 +10,7 @@
       @if (!isOpened()) {
         <div class="absolute inset-0 z-50 flex items-center justify-center gift-box cursor-pointer" (click)="openGift()">
           <div class="text-center group">
-            <img [src]="customerData().boxImg" class="w-44 h-44 animate-bounce transition-transform group-hover:scale-110 drop-shadow-[0_0_25px_rgba(255,20,147,0.6)]" />
+            <img [src]="customerData().boxImg" class="w-44 h-44 animate-bounce drop-shadow-[0_0_25px_rgba(255,20,147,0.6)]" />
             <p class="text-white mt-6 font-serif tracking-[0.4em] uppercase text-sm animate-pulse">Open Your Gift</p>
           </div>
         </div>
@@ -20,27 +20,27 @@
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
           
           @for (img of customerData().floatingImages; track $index) {
-            <div class="floating-element absolute w-28 h-36 md:w-32 md:h-40 neon-card p-1.5 rounded-xl border-2 border-[#ff1493]/50">
-              <img [src]="img" class="w-full h-full object-cover rounded-lg brightness-110" />
+            <div class="floating-element neon-card p-1">
+              <img [src]="img" class="w-full h-full object-cover rounded-lg" />
             </div>
           }
 
           @for (wish of customerData().wishes; track $index) {
-            <div class="floating-element absolute px-4 py-2 bg-black/60 backdrop-blur-xl border border-[#ff1493]/30 rounded-full shadow-[0_0_15px_rgba(255,20,147,0.3)]">
-              <span class="text-pink-100 text-xs md:text-sm font-light tracking-wide whitespace-nowrap">{{ wish }}</span>
+            <div class="floating-element wish-bubble px-4 py-2 rounded-full">
+              <span class="font-light tracking-wide whitespace-nowrap">{{ wish }}</span>
             </div>
           }
 
           @for (emoji of customerData().emojis; track $index) {
-            <span class="floating-element absolute text-4xl md:text-6xl select-none filter drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]">
+            <span class="floating-element text-4xl select-none">
               {{ emoji }}
             </span>
           }
         </div>
 
         <div class="z-20 text-center px-4 pointer-events-none">
-          <img [src]="customerData().roseImg" class="rose-img w-64 md:w-96 mx-auto mb-6" />
-          <h1 class="main-title text-pink-500 font-serif text-2xl md:text-5xl tracking-[0.4em] uppercase">
+          <img [src]="customerData().roseImg" class="rose-img mx-auto mb-6" />
+          <h1 class="main-title uppercase">
             {{ customerData().mainTitle }}
           </h1>
         </div>
@@ -48,12 +48,8 @@
 
     } @else {
       <div class="absolute inset-0 z-50 flex flex-col items-center justify-center text-white p-4">
-        <div class="p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 text-center shadow-2xl">
-          <h2 class="text-6xl font-serif mb-2 text-pink-500 drop-shadow-[0_0_15px_rgba(255,20,147,0.5)]">404</h2>
-          <div class="h-px w-20 bg-pink-500/50 mx-auto mb-6"></div>
-          <p class="text-lg tracking-[0.3em] uppercase font-light text-pink-100">Gift Not Found</p>
-          <p class="text-xs mt-4 opacity-40 max-w-[200px] leading-relaxed">The invitation link is invalid or has expired.</p>
-        </div>
+        <h2 class="text-6xl font-serif text-pink-500">404</h2>
+        <p class="tracking-widest uppercase mt-4">Gift Not Found</p>
       </div>
     }
   }

@@ -33,7 +33,7 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadCustomerData() {
     const id = this.route.snapshot.paramMap.get('id');
     this.http.get<any[]>('/customers.json').subscribe({
-      next: (data: any[]) => {
+      next: (data) => {
         const found = data.find((c: any) => c.id === id);
         this.customerData.set(found || null);
         this.isLoading.set(false);
@@ -60,7 +60,7 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
     this.camera.position.z = 5;
 
     const starGeometry = new THREE.BufferGeometry();
-    const starCount = 5000;
+    const starCount = 3000;
     const posArray = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount * 3; i++) posArray[i] = (Math.random() - 0.5) * 100;
 
@@ -70,8 +70,7 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const animate = () => {
       this.animationId = requestAnimationFrame(animate);
-      this.stars.rotation.y += 0.0005;
-      this.stars.rotation.x += 0.0002;
+      this.stars.rotation.y += 0.0003;
       this.renderer.render(this.scene, this.camera);
     };
     animate();
@@ -79,66 +78,65 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private onWindowResize() {
-    if (!this.camera || !this.renderer) return;
+    if (!this.renderer) return;
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   openGift() {
-    if (this.isOpened() || !this.customerData()) return;
+    if (this.isOpened()) return;
     this.isOpened.set(true);
 
     const tl = gsap.timeline();
-    // Gift Box ကို ပျောက်အောင်လုပ်
-    tl.to('.gift-box', { duration: 0.6, scale: 0, opacity: 0, ease: 'back.in(1.7)' });
-    
-    // Overlay ကို ဖော်မယ် (autoAlpha က display: none ကိုပါ handle လုပ်ပေးပါတယ်)
+    tl.to('.gift-box', { duration: 0.5, scale: 0, opacity: 0, ease: 'back.in' });
     tl.to('.galaxy-overlay', { 
-      duration: 1, 
-      autoAlpha: 1, 
+      duration: 0.8, 
+      opacity: 1, 
       onComplete: () => this.animateElements() 
     });
   }
 
-private animateElements() {
+ private animateElements() {
+  const isMobile = window.innerWidth < 768;
   const elements = gsap.utils.toArray<HTMLElement>('.floating-element');
   
   elements.forEach((el) => {
-    // Screen size အလိုက် range ကို သတ်မှတ်မယ်
-    const isMobile = window.innerWidth < 768;
-    
-    // Mobile မှာဆိုရင် အနားသတ်တွေနဲ့ မထိအောင် 80% area အတွင်းမှာပဲ ပျံ့စေမယ်
-    // Desktop မှာဆိုရင် 90% area အထိ သုံးမယ်
-    const spreadFactor = isMobile ? 0.8 : 0.9;
-    
-    const randomX = (Math.random() - 0.5) * window.innerWidth * spreadFactor;
-    const randomY = (Math.random() - 0.5) * window.innerHeight * spreadFactor;
-    
-    // ပုံတွေကို အစမှာ ပျောက်ထားပြီး နေရာချမယ်
-    gsap.set(el, { 
-      x: randomX, 
-      y: randomY, 
-      opacity: 0, 
-      scale: 0,
-      zIndex: Math.floor(Math.random() * 10) // တစ်ခုနဲ့တစ်ခု ထပ်နေရင်တောင် အစီအစဉ်မပျက်အောင်
-    });
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
-    // Animation စတင်မယ်
+    let randomX, randomY;
+
+    if (isMobile) {
+      // Mobile Safe Zone Logic: နှင်းဆီပွင့်ရှိတဲ့ အလယ်ဗဟိုကို ရှောင်မယ်
+      // အပေါ်ဘက် 40% နဲ့ အောက်ဘက် 40% ဧရိယာထဲမှာပဲ ပုံတွေကို ထားမယ်
+      randomX = (Math.random() - 0.5) * w * 0.85;
+      
+      const side = Math.random() > 0.5 ? 1 : -1; 
+      // အလယ် (Center) ကနေ အပေါ် (သို့) အောက်ကို တွန်းထုတ်လိုက်တာပါ
+      randomY = side * (h * 0.25 + Math.random() * h * 0.2); 
+    } else {
+      randomX = (Math.random() - 0.5) * w * 0.9;
+      randomY = (Math.random() - 0.5) * h * 0.9;
+    }
+    
+    gsap.set(el, { x: randomX, y: randomY, opacity: 0, scale: 0 });
+
     gsap.to(el, {
       opacity: 1,
-      scale: isMobile ? gsap.utils.random(0.5, 0.8) : gsap.utils.random(0.7, 1.2), // Mobile မှာ ပုံနည်းနည်း သေးပေးမယ်
-      x: `+=${gsap.utils.random(-30, 30)}`, // Floating ဖြစ်နေတဲ့ range ကို နည်းနည်းလျှော့လိုက်တယ် (တည်ငြိမ်အောင်)
-      y: `+=${gsap.utils.random(-30, 30)}`,
-      rotation: 'random(-10, 10)',
-      duration: gsap.utils.random(4, 8), // လှုပ်ရှားမှုကို ပိုသိသာအောင် speed နည်းနည်းတင်ထားတယ်
+      // Size ကို နည်းနည်းပြန်လျှော့ထားပါတယ် (အရမ်းကြီးမနေအောင်)
+      scale: isMobile ? gsap.utils.random(0.6, 0.8) : gsap.utils.random(0.8, 1.1),
+      x: `+=${gsap.utils.random(-25, 25)}`,
+      y: `+=${gsap.utils.random(-25, 25)}`,
+      duration: gsap.utils.random(6, 12),
       repeat: -1,
       yoyo: true,
       ease: 'sine.inOut',
-      delay: Math.random() * 2 // တစ်ပြိုင်နက်ကြီး ပေါ်မလာဘဲ တစ်ခုချင်းစီ ထွက်လာအောင်
+      delay: Math.random() * 2
     });
   });
 }
+
   ngOnDestroy() {
     if (this.animationId) cancelAnimationFrame(this.animationId);
     window.removeEventListener('resize', this.onWindowResize.bind(this));
