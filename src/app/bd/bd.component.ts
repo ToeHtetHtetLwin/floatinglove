@@ -101,31 +101,44 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private animateElements() {
-    gsap.utils.toArray<HTMLElement>('.floating-element').forEach((el) => {
-      // Mobile screen range ကို ညှိထားပါတယ်
-      const range = window.innerWidth < 768 ? 0.8 : 0.9;
-      const randomX = (Math.random() - 0.5) * window.innerWidth * range;
-      const randomY = (Math.random() - 0.5) * window.innerHeight * range;
-      
-      gsap.set(el, { x: randomX, y: randomY, opacity: 0, scale: 0 });
-
-      // မူလ Animation Style အတိုင်း Fade in / Floating logic
-      gsap.to(el, {
-        opacity: 1,
-        scale: gsap.utils.random(0.7, 1.2),
-        x: `+=${gsap.utils.random(-60, 60)}`,
-        y: `+=${gsap.utils.random(-60, 60)}`,
-        rotation: 'random(-15, 15)',
-        duration: gsap.utils.random(8, 15),
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: Math.random() * 1.5
-      });
+private animateElements() {
+  const elements = gsap.utils.toArray<HTMLElement>('.floating-element');
+  
+  elements.forEach((el) => {
+    // Screen size အလိုက် range ကို သတ်မှတ်မယ်
+    const isMobile = window.innerWidth < 768;
+    
+    // Mobile မှာဆိုရင် အနားသတ်တွေနဲ့ မထိအောင် 80% area အတွင်းမှာပဲ ပျံ့စေမယ်
+    // Desktop မှာဆိုရင် 90% area အထိ သုံးမယ်
+    const spreadFactor = isMobile ? 0.8 : 0.9;
+    
+    const randomX = (Math.random() - 0.5) * window.innerWidth * spreadFactor;
+    const randomY = (Math.random() - 0.5) * window.innerHeight * spreadFactor;
+    
+    // ပုံတွေကို အစမှာ ပျောက်ထားပြီး နေရာချမယ်
+    gsap.set(el, { 
+      x: randomX, 
+      y: randomY, 
+      opacity: 0, 
+      scale: 0,
+      zIndex: Math.floor(Math.random() * 10) // တစ်ခုနဲ့တစ်ခု ထပ်နေရင်တောင် အစီအစဉ်မပျက်အောင်
     });
-  }
 
+    // Animation စတင်မယ်
+    gsap.to(el, {
+      opacity: 1,
+      scale: isMobile ? gsap.utils.random(0.5, 0.8) : gsap.utils.random(0.7, 1.2), // Mobile မှာ ပုံနည်းနည်း သေးပေးမယ်
+      x: `+=${gsap.utils.random(-30, 30)}`, // Floating ဖြစ်နေတဲ့ range ကို နည်းနည်းလျှော့လိုက်တယ် (တည်ငြိမ်အောင်)
+      y: `+=${gsap.utils.random(-30, 30)}`,
+      rotation: 'random(-10, 10)',
+      duration: gsap.utils.random(4, 8), // လှုပ်ရှားမှုကို ပိုသိသာအောင် speed နည်းနည်းတင်ထားတယ်
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: Math.random() * 2 // တစ်ပြိုင်နက်ကြီး ပေါ်မလာဘဲ တစ်ခုချင်းစီ ထွက်လာအောင်
+    });
+  });
+}
   ngOnDestroy() {
     if (this.animationId) cancelAnimationFrame(this.animationId);
     window.removeEventListener('resize', this.onWindowResize.bind(this));
