@@ -6,9 +6,9 @@
 
 .galaxy-overlay {
   background: radial-gradient(circle at center, transparent 0%, rgba(2, 8, 23, 0.95) 100%);
+  visibility: hidden; /* အစပိုင်းမှာ ဖျောက်ထားမယ် */
 }
 
-/* Neon Pink Card Style */
 .neon-card {
   background: rgba(255, 20, 147, 0.1);
   box-shadow: 0 0 20px rgba(255, 20, 147, 0.4), 
@@ -21,10 +21,9 @@
   position: absolute;
 }
 
-/* Central Text Glow */
 .main-title {
   text-shadow: 0 0 20px rgba(255, 20, 147, 0.8),
-               0 0 40px rgba(255, 20, 147, 0.4);
+                0 0 40px rgba(255, 20, 147, 0.4);
   animation: glowPulse 2s ease-in-out infinite alternate;
 }
 
@@ -43,8 +42,9 @@
   to { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 60px rgba(255,20,147,0.7)); }
 }
 
-/* Responsive Scaling */
+/* Responsive Scaling for Mobile */
 @media (max-width: 768px) {
   .floating-element { transform: scale(0.7) !important; }
-  .main-title { font-size: 2rem; letter-spacing: 0.3em; }
+  .main-title { font-size: 1.8rem !important; letter-spacing: 0.2em !important; }
+  .rose-img { width: 220px !important; }
 }

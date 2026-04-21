@@ -16,12 +16,10 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
 
-  // States
   isOpened = signal<boolean>(false);
   customerData = signal<any>(null);
-  isLoading = signal<boolean>(true); // Loading state ထည့်ထားပါတယ်
+  isLoading = signal<boolean>(true);
 
-  // Three.js Variables
   private scene = new THREE.Scene();
   private camera!: THREE.PerspectiveCamera;
   private renderer!: THREE.WebGLRenderer;
@@ -34,15 +32,13 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private loadCustomerData() {
     const id = this.route.snapshot.paramMap.get('id');
-
     this.http.get<any[]>('/customers.json').subscribe({
       next: (data: any[]) => {
         const found = data.find((c: any) => c.id === id);
         this.customerData.set(found || null);
         this.isLoading.set(false);
       },
-      error: (err:any) => {
-        console.error('Data load error:', err);
+      error: () => {
         this.customerData.set(null);
         this.isLoading.set(false);
       }
@@ -56,7 +52,6 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
   private initThreeJS() {
     const width = window.innerWidth;
     const height = window.innerHeight;
-
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(width, height);
     this.canvasContainer.nativeElement.appendChild(this.renderer.domElement);
@@ -80,7 +75,6 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
       this.renderer.render(this.scene, this.camera);
     };
     animate();
-
     window.addEventListener('resize', this.onWindowResize.bind(this));
   }
 
@@ -96,17 +90,27 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isOpened.set(true);
 
     const tl = gsap.timeline();
+    // Gift Box ကို ပျောက်အောင်လုပ်
     tl.to('.gift-box', { duration: 0.6, scale: 0, opacity: 0, ease: 'back.in(1.7)' });
-    tl.set('.galaxy-overlay', { display: 'flex' });
-    tl.to('.galaxy-overlay', { duration: 1, opacity: 1, onComplete: () => this.animateElements() });
+    
+    // Overlay ကို ဖော်မယ် (autoAlpha က display: none ကိုပါ handle လုပ်ပေးပါတယ်)
+    tl.to('.galaxy-overlay', { 
+      duration: 1, 
+      autoAlpha: 1, 
+      onComplete: () => this.animateElements() 
+    });
   }
 
   private animateElements() {
     gsap.utils.toArray<HTMLElement>('.floating-element').forEach((el) => {
-      const randomX = (Math.random() - 0.5) * window.innerWidth * 0.9;
-      const randomY = (Math.random() - 0.5) * window.innerHeight * 0.9;
+      // Mobile screen range ကို ညှိထားပါတယ်
+      const range = window.innerWidth < 768 ? 0.8 : 0.9;
+      const randomX = (Math.random() - 0.5) * window.innerWidth * range;
+      const randomY = (Math.random() - 0.5) * window.innerHeight * range;
+      
       gsap.set(el, { x: randomX, y: randomY, opacity: 0, scale: 0 });
 
+      // မူလ Animation Style အတိုင်း Fade in / Floating logic
       gsap.to(el, {
         opacity: 1,
         scale: gsap.utils.random(0.7, 1.2),
