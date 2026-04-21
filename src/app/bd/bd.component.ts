@@ -97,45 +97,33 @@ export class BdComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
- private animateElements() {
-  const isMobile = window.innerWidth < 768;
-  const elements = gsap.utils.toArray<HTMLElement>('.floating-element');
-  
-  elements.forEach((el) => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-
-    let randomX, randomY;
-
-    if (isMobile) {
-      // Mobile Safe Zone Logic: နှင်းဆီပွင့်ရှိတဲ့ အလယ်ဗဟိုကို ရှောင်မယ်
-      // အပေါ်ဘက် 40% နဲ့ အောက်ဘက် 40% ဧရိယာထဲမှာပဲ ပုံတွေကို ထားမယ်
-      randomX = (Math.random() - 0.5) * w * 0.85;
-      
-      const side = Math.random() > 0.5 ? 1 : -1; 
-      // အလယ် (Center) ကနေ အပေါ် (သို့) အောက်ကို တွန်းထုတ်လိုက်တာပါ
-      randomY = side * (h * 0.25 + Math.random() * h * 0.2); 
-    } else {
-      randomX = (Math.random() - 0.5) * w * 0.9;
-      randomY = (Math.random() - 0.5) * h * 0.9;
-    }
+  private animateElements() {
+    const isMobile = window.innerWidth < 768;
+    const elements = gsap.utils.toArray<HTMLElement>('.floating-element');
     
-    gsap.set(el, { x: randomX, y: randomY, opacity: 0, scale: 0 });
+    elements.forEach((el) => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
 
-    gsap.to(el, {
-      opacity: 1,
-      // Size ကို နည်းနည်းပြန်လျှော့ထားပါတယ် (အရမ်းကြီးမနေအောင်)
-      scale: isMobile ? gsap.utils.random(0.6, 0.8) : gsap.utils.random(0.8, 1.1),
-      x: `+=${gsap.utils.random(-25, 25)}`,
-      y: `+=${gsap.utils.random(-25, 25)}`,
-      duration: gsap.utils.random(6, 12),
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-      delay: Math.random() * 2
+      // Screen တစ်ခုလုံး ပျံ့နေအောင် 90% spread သုံးထားပါတယ်
+      const randomX = (Math.random() - 0.5) * w * 0.9;
+      const randomY = (Math.random() - 0.5) * h * 0.9;
+      
+      gsap.set(el, { x: randomX, y: randomY, opacity: 0, scale: 0 });
+
+      gsap.to(el, {
+        opacity: 1,
+        scale: isMobile ? gsap.utils.random(0.7, 0.9) : gsap.utils.random(0.8, 1.1),
+        x: `+=${gsap.utils.random(-30, 30)}`,
+        y: `+=${gsap.utils.random(-30, 30)}`,
+        duration: gsap.utils.random(6, 12),
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: Math.random() * 2
+      });
     });
-  });
-}
+  }
 
   ngOnDestroy() {
     if (this.animationId) cancelAnimationFrame(this.animationId);

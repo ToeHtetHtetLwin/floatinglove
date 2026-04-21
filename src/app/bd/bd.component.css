@@ -2,18 +2,16 @@
   display: block;
   height: 100vh;
   width: 100vw;
-  overflow: hidden; /* Screen ဘေးမထွက်အောင် */
+  overflow: hidden;
   background: #020817;
 }
 
-/* Background Star Animation Area */
 #canvasContainer {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
 
-/* Container for all content */
 .galaxy-overlay {
   position: absolute;
   inset: 0;
@@ -24,7 +22,13 @@
   z-index: 10;
 }
 
-/* Floating Photo Cards */
+/* Floating Elements (Photos, Emojis, Wishes) */
+.floating-element {
+  position: absolute;
+  pointer-events: none;
+  z-index: 20 !important; /* နှင်းဆီရဲ့ အောက်မှာ ရှိနေစေဖို့ */
+}
+
 .neon-card {
   background: rgba(255, 20, 147, 0.1);
   box-shadow: 0 0 15px rgba(255, 20, 147, 0.4);
@@ -32,41 +36,32 @@
   border: 1.5px solid rgba(255, 20, 147, 0.5);
   border-radius: 12px;
   overflow: hidden;
-  width: 120px; /* Desktop size */
+  width: 120px;
   height: 160px;
 }
 
-.floating-element {
-  position: absolute;
-  pointer-events: none;
-  z-index: 15;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Middle Content - အမြဲအပေါ်ဆုံးမှာ ရှိရမယ် */
+.rose-img {
+  z-index: 100 !important;
+  filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.6));
+  position: relative;
 }
 
-/* Middle Content: Rose and Title */
 .main-title {
   color: #ff1493;
   text-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
-  font-family: 'Serif', 'Times New Roman', serif;
+  font-family: serif;
   text-align: center;
-  z-index: 30; /* ပုံတွေအောက် ရောက်မသွားအောင် */
-  margin-top: 10px;
+  z-index: 100 !important;
   font-weight: bold;
+  position: relative;
 }
 
-.rose-img {
-  z-index: 30;
-  filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.5));
-}
-
-/* Wish Bubbles Fix - အမဲဝိုင်းပျောက်အောင် ပြင်ထားတာ */
+/* Wish Bubbles */
 .wish-bubble {
   background: rgba(255, 20, 147, 0.15) !important;
   border: 1px solid rgba(255, 20, 147, 0.4) !important;
   backdrop-filter: blur(4px) !important;
-  box-shadow: 0 0 10px rgba(255, 20, 147, 0.2) !important;
   padding: 8px 16px;
   border-radius: 50px;
 }
@@ -76,48 +71,43 @@
   white-space: nowrap;
 }
 
-/* --- Responsive fixes for Mobile --- */
+/* Mobile Responsive Fixes */
 @media (max-width: 768px) {
-  
-  /* ပုံ size ကို အရမ်းမကြီးအောင် 90px/120px ပဲ ထားမယ် */
   .floating-element.neon-card { 
-    width: 90px !important;  
-    height: 120px !important; 
+    width: 85px !important;  
+    height: 110px !important; 
   }
 
-  /* နှင်းဆီပွင့်ကို safe zone ပိုရအောင် နည်းနည်းသေးပေးမယ် */
   .rose-img { 
-    width: 180px !important; 
+    width: 170px !important; 
     margin-bottom: 10px;
   }
 
   .main-title { 
     font-size: 1.4rem !important; 
-    letter-spacing: 0.15em !important;
-    width: 85vw;
+    letter-spacing: 0.1em !important;
+    width: 90vw;
   }
 
-  /* Wish bubble တွေကို mobile မှာ သေးလိုက်မယ် */
   .wish-bubble {
     padding: 5px 12px !important;
   }
   
   .wish-bubble span {
-    font-size: 0.75rem !important;
+    font-size: 0.8rem !important;
   }
 }
 
-/* Gift Box animation for bounce */
+/* Animations */
 .animate-bounce {
   animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(-10%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
-  50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  0%, 100% { transform: translateY(-10%); }
+  50% { transform: translateY(0); }
 }
 
-/* Spinner for loading */
 .animate-spin {
   animation: spin 1s linear infinite;
 }
