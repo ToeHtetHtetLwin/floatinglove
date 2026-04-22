@@ -53,5 +53,64 @@
       "Be happy always",
       "Special Day"
     ]
+  },
+  {
+    "id": "002",
+    "boxImg": "/box.png",
+    "roseImg": "rose.webp",
+    "mainTitle": "Happy Birthday",
+    "floatingImages": [
+      "/s1.jpg",
+      "/s2.webp",
+      "/s3.jpg",
+      "/s4.jpg",
+      "/s5.jpg",
+      "/s6.jpg",
+      "/s1.jpg",
+      "/s2.webp",
+      "/s3.jpg",
+      "/s4.jpg",
+      "/s5.jpg",
+      "/s6.jpg",
+      "/s1.jpg",
+      "/s2.webp",
+      "/s3.jpg",
+      "/s4.jpg",
+      "/s5.jpg",
+      "/s6.jpg",
+      "/s1.jpg",
+      "/s2.webp",
+      "/s3.jpg",
+      "/s4.jpg",
+      "/s5.jpg",
+      "/s6.jpg"
+    ],
+    "emojis": [
+      "🌸",
+      "✨",
+      "💖",
+      "🎂",
+      "🌸",
+      "✨",
+      "💖",
+      "🎂"
+    ],
+    "wishes": [
+      "Happy Birthday Oh Sehun",
+      "Hope your day is full of love",
+      " Happy Birthday",
+      "Love you always",
+      "May your day is a beautiful day",
+      "Happy Birthday Oh Sehun",
+      "Hope your day is full of love",
+      " Happy Birthday",
+      "Love you always",
+      "May your day is a beautiful day",
+      "Happy Birthday Oh Sehun",
+      "Hope your day is full of love",
+      " Happy Birthday",
+      "Love you always",
+      "May your day is a beautiful day"
+    ]
   }
 ]
